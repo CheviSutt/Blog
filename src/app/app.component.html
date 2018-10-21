@@ -1,8 +1,8 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<!--Note: Property and Event binding on line's 4 & 5-->
 <app-head></app-head>
 <main>
-  <app-post-add></app-post-add>
-  <app-post-currPosts></app-post-currPosts>
+  <app-post-add (postAdded)="onPostCreated($event)"></app-post-add> <!--Listening to post created event, 'post-add.component.ts'. Then adding the post to 'app.component' createdPosts-->
+  <app-post-currPosts [posts]="createdPosts"></app-post-currPosts> <!--'app.component' passed the created posts to 'post-currPosts'-->
 </main>
 
 
