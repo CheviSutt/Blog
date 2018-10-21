@@ -1,18 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-
 import { AppComponent } from './app.component';
 import { PostAddComponent } from './posts/post-createBlog/post-add.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule, MatCardModule, MatCheckboxModule, MatInputModule} from '@angular/material';
+import { MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatInputModule, MatToolbarModule } from '@angular/material';
+import { HeadComponent } from './head/head.component';
+import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostAddComponent
+    PostAddComponent,
+    PostCurrPostsComponent,
+    HeadComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +24,9 @@ import {MatButtonModule, MatCardModule, MatCheckboxModule, MatInputModule} from 
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatToolbarModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
