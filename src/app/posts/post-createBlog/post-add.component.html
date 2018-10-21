@@ -1,5 +1,11 @@
-<!--<textarea rows="6" [value]="newPost" #addInput></textarea> &lt;!&ndash;adjust text area here&ndash;&gt;-->
-<textarea rows="6" [(ngModel)]="textEntered"></textarea>
-<hr>
-<button (click)="onAddPost()">Add Post</button>
+
+<mat-card>
+  <mat-form-field>
+    <!--<textarea rows="6" [value]="newPost" #addInput></textarea> &lt;!&ndash;adjust text area here&ndash;&gt;-->
+    <textarea matInput rows="6" [(ngModel)]="textEntered"></textarea>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="onAddPost()">Add Post</button>
+</mat-card>
+
 <p>{{ newPost }}</p>
