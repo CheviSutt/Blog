@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatInputModule, MatToolbarModule } from '@angular/material';
 import { HeadComponent } from './head/head.component';
 import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.component';
+import { PostsService } from './posts/posts.service';
 
 
 @NgModule({
@@ -28,7 +29,7 @@ import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.co
     MatToolbarModule,
     MatExpansionModule
   ],
-  providers: [],
+  providers: [PostsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
