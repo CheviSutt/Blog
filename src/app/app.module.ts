@@ -9,6 +9,7 @@ import { MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, 
 import { HeadComponent } from './head/head.component';
 import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.component';
 import { PostsService } from './posts/posts.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { PostsService } from './posts/posts.service';
     MatInputModule,
     MatCardModule,
     MatToolbarModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HttpClientModule
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

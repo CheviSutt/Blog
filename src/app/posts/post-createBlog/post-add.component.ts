@@ -10,8 +10,6 @@ import { PostsService } from '../posts.service';
   styleUrls: ['./post-add.component.css']
 })
 export class PostAddComponent {
-  titleEntered = '';
-  contentEntered = '';
   // @Output() postAdded = new EventEmitter<Post>(); // Data emitted is "Post"
 
   constructor(public postsService: PostsService) {}

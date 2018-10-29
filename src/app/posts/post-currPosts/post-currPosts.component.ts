@@ -22,7 +22,8 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   // Keyword: public, stores value of property in component^^
 
   ngOnInit() {
-    this.posts = this.postsService.getPosts(); // Retrieves all the posts
+    this.postsService.getPosts();
+   // this.posts = this.postsService.getPosts(); // Retrieves all the posts before backend
     this.postsSub = this.postsService.getUpdatedPostsListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
