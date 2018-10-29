@@ -1,31 +1,44 @@
 
-const express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
+
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Header", "Origin, X-Requested-With, Content-Type, Accept"); // Incoming request may have extra headers
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PATCH, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); // Incoming request may have extra headers
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
   next();
 });
 
-app.use('/posts', (req, res, next) => { // This is a REST API
+app.post("/posts", (req, res, next) => { // 201 = a new resource was created
+  const post = req.body;
+  console.log(post);
+  res.status(201).json({
+    message: 'Post added successfully'
+  });
+});
 
+app.get("/posts", (req, res, next) => { // This is a REST API
   const posts = [
-    { id: 'fash2342',
-      title: 'First server side post',
-      content: 'This is coming from the server'
+    {
+      id: "fadf12421l",
+      title: "First server-side post",
+      content: "This is coming from the server"
     },
-    { id: 'gvsw0738',
-      title: 'Second server side post',
-      content: 'This is coming from the server also'
+    {
+      id: "ksajflaj132",
+      title: "Second server-side post",
+      content: "This is coming from the server!"
     }
   ];
-
-  res.status(200).json({
-    message: 'Posts fetched successfully',
+  res.status(200).json({ // 200 = everything ok
+    message: "Posts fetched successfully!",
     posts: posts
-    });
+  });
 });
 
 module.exports = app;
