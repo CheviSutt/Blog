@@ -1,6 +1,7 @@
 import { Post } from './blog-post.model';
 import { Injectable } from '@angular/core'; // getting an error
 import { Subject } from 'rxjs/Subject';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn: 'root'}) // applies service to the root, you can also import and providers=postsServices in app.module
@@ -11,9 +12,18 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts() {
-    this.http.get<{ message: string, posts: Post[] }>('http://localhost:3000/posts')
-      .subscribe(postData => {
-        this.posts = postData.posts; // Setting posts variable to posts from server
+    this.http.get<{ message: string, posts: any }>('http://localhost:3000/posts')
+      .pipe(map((postData) => {
+        return postData.posts.map(post => {
+          return { // every element in array will be converted to object
+            title: post.title,
+            content: post.content,
+            id: post._id
+          };
+        });
+      }))
+      .subscribe( reconfiguredPosts => { // reconfiguredPosts is result of map operation above
+        this.posts = reconfiguredPosts; // Setting posts variable to posts from server
         this.updatedPosts.next([...this.posts]);
       });
    // return [...this.posts]; // spread operator before backend added
@@ -32,4 +42,12 @@ export class PostsService {
         this.updatedPosts.next([...this.posts]);
       });
   }
+
+  deletePost(postID: string ) {
+    this.http.delete('http://localhost:3000/posts' + postID)
+      .subscribe(() => {
+        console.log('Deleted Post!');
+      });
+  }
+
 }

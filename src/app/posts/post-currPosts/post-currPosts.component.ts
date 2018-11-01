@@ -30,6 +30,10 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
       });
   }
 
+  postDelete(postID: string) {
+    this.postsService.deletePost(postID);
+  }
+
   ngOnDestroy() {
     this.postsSub.unsubscribe(); // Prevents memory leak
   }
