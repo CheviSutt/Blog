@@ -34,21 +34,16 @@ export class PostsService {
   }
 
   addPost(title: string, content: string) {
-    const post: Post = { id: null, title: title, content: content};
-    this.http.post<{message: string}>('http://localhost:3000/posts', post)
+    const post: Post = { id: null, title: title, content: content };
+    this.http.post<{ message: string, postID: string }>('http://localhost:3000/posts', post)
       .subscribe((responseData) => {
-        console.log(responseData.message);
+        // console.log(responseData.message);
+        const id = responseData.postID;
+        post.id = id; // id updated and stored to post variable below
         this.posts.push(post); // updates local post
         this.updatedPosts.next([...this.posts]);
       });
   }
-
-  // deletePost(postID: string ) {
-  //   this.http.delete('http://localhost:3000/posts' + postID)
-  //     .subscribe(() => {
-  //       console.log('Deleted Post!');
-  //     });
-  // }
 
   deletePost(postID: string) {
     this.http.delete('http://localhost:3000/posts/' + postID)

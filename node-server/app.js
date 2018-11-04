@@ -41,7 +41,7 @@ app.post("/posts", (req, res, next) => {
   post.save().then(createdPost => {
     res.status(201).json({
       message: "Post added successfully",
-      postId: createdPost._id
+      postID: createdPost._id
     });
   });
 });
