@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+// import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Post } from '../blog-post.model';
 import { PostsService } from '../posts.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-currPosts',

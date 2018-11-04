@@ -43,10 +43,19 @@ export class PostsService {
       });
   }
 
-  deletePost(postID: string ) {
-    this.http.delete('http://localhost:3000/posts' + postID)
+  // deletePost(postID: string ) {
+  //   this.http.delete('http://localhost:3000/posts' + postID)
+  //     .subscribe(() => {
+  //       console.log('Deleted Post!');
+  //     });
+  // }
+
+  deletePost(postID: string) {
+    this.http.delete('http://localhost:3000/posts/' + postID)
       .subscribe(() => {
-        console.log('Deleted Post!');
+        const updatedPosts = this.posts.filter(post => post.id !== postID);
+        this.posts = updatedPosts;
+        this.updatedPosts.next([...this.posts]);
       });
   }
 
