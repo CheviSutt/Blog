@@ -10,6 +10,7 @@ import { HeadComponent } from './head/head.component';
 import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.component';
 import { PostsService } from './posts/posts.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
     MatButtonModule,
