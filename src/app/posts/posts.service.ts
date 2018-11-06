@@ -33,6 +33,10 @@ export class PostsService {
     return this.updatedPosts.asObservable();
   }
 
+  getPost(id: string) {
+    return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
+  }
+
   addPost(title: string, content: string) {
     const post: Post = { id: null, title: title, content: content };
     this.http.post<{ message: string, postID: string }>('http://localhost:3000/posts', post)
