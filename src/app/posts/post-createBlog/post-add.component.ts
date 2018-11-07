@@ -1,5 +1,5 @@
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { Post } from '../blog-post.model'; // post pipe
 import { NgForm } from '@angular/forms';
 import { PostsService } from '../posts.service';
@@ -12,11 +12,11 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class PostAddComponent implements OnInit {
   // @Output() postAdded = new EventEmitter<Post>(); // Data emitted is "Post"
-  // enteredTitle = '';
-  // enteredContent = '';
+  enteredTitle = '';
+  enteredContent = '';
+  post: Post;
   private mode = 'newPost'; // Component properties, hint for Vue.js
   private postId: string; // Component properties
-  private post: Post;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
@@ -33,13 +33,18 @@ export class PostAddComponent implements OnInit {
     }); // observable listening to changes in route url/parameter
   }
 
-  onAddPost(form: NgForm) {
+  onSavePost(form: NgForm) {
     if (form.invalid) { // Keeps from posting empty fields
       return;
     }
+    if (this.mode === 'newPost') {
+      this.postsService.addPost(form.value.title, form.value.content);
+    } else {
+      this.postsService.updatePost(this.postId, form.value.title, form.value.content);
+    }
     // const post: Post = { title: form.value.title, content: form.value.content};
     // this.postAdded.emit(post);
-    this.postsService.addPost(form.value.title, form.value.content); // Replaces Event Emitter
+    // this.postsService.addPost(form.value.title, form.value.content); // Replaces Event Emitter
     form.resetForm();
   }
 }

@@ -39,20 +39,26 @@ export class PostsService {
 
   addPost(title: string, content: string) {
     const post: Post = { id: null, title: title, content: content };
-    this.http.post<{ message: string, postID: string }>('http://localhost:3000/posts', post)
+    this.http.post<{ message: string, postId: string }>('http://localhost:3000/posts', post)
       .subscribe((responseData) => {
         // console.log(responseData.message);
-        const id = responseData.postID;
+        const id = responseData.postId;
         post.id = id; // id updated and stored to post variable below
         this.posts.push(post); // updates local post
         this.updatedPosts.next([...this.posts]);
       });
   }
 
-  deletePost(postID: string) {
-    this.http.delete('http://localhost:3000/posts/' + postID)
+  updatePost(id: string, title: string, content: string) {
+    const post: Post = { id: id, title: title, content: content };
+    this.http.put('http://localhost:3000/posts/' + id, post) // put method from app.js - app.put(/posts/:id)
+      .subscribe(response => console.log(response));
+  }
+
+  deletePost(postId: string) {
+    this.http.delete('http://localhost:3000/posts/' + postId)
       .subscribe(() => {
-        const updatedPosts = this.posts.filter(post => post.id !== postID);
+        const updatedPosts = this.posts.filter(post => post.id !== postId);
         this.posts = updatedPosts;
         this.updatedPosts.next([...this.posts]);
       });
