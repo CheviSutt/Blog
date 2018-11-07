@@ -51,12 +51,12 @@ export class PostsService {
 
   updatePost(id: string, title: string, content: string) {
     const post: Post = { id: id, title: title, content: content };
-    this.http.put('http://localhost:3000/posts/' + id, post) // put method from app.js - app.put(/posts/:id)
+    this.http.put('http://localhost:3000/posts/' + id, post) // http.put = put method from app.js - app.put(/posts/:id)
       .subscribe(response => console.log(response));
   }
 
   deletePost(postId: string) {
-    this.http.delete('http://localhost:3000/posts/' + postId)
+    this.http.delete('http://localhost:3000/posts/' + postId) // http.delete = app.delete in app.js
       .subscribe(() => {
         const updatedPosts = this.posts.filter(post => post.id !== postId);
         this.posts = updatedPosts;
