@@ -15,6 +15,7 @@ export class PostAddComponent implements OnInit {
   enteredTitle = '';
   enteredContent = '';
   post: Post;
+  loadingSpinner = false;
   private mode = 'newPost'; // Component properties, hint for Vue.js
   private postId: string; // Component properties
 
@@ -25,7 +26,11 @@ export class PostAddComponent implements OnInit {
       if ( paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
-        this.post = this.postsService.getPost(this.postId);
+        this.loadingSpinner = true;
+        this.postsService.getPost(this.postId).subscribe(postData => { // async
+          this.loadingSpinner = false;
+          this.post = {id: postData._id, title: postData.title, content: postData.content}; // async
+        });
       } else {
         this.mode = 'newPost';
         this.postId = null;
@@ -37,6 +42,7 @@ export class PostAddComponent implements OnInit {
     if (form.invalid) { // Keeps from posting empty fields
       return;
     }
+    this.loadingSpinner = true;
     if (this.mode === 'newPost') {
       this.postsService.addPost(form.value.title, form.value.content);
     } else {

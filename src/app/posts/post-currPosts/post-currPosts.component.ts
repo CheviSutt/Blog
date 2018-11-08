@@ -17,16 +17,19 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   //   {title: 'Test Post-3', content: '3: are some words to fill in text'}
   //   ];
   posts: Post[] = [];
+  loadingSpinner = false;
   private postsSub: Subscription;
 
   constructor(public postsService: PostsService) {} // Looking for an instance of PostsService type,
   // Keyword: public, stores value of property in component^^
 
   ngOnInit() {
+    this.loadingSpinner = true;
     this.postsService.getPosts();
    // this.posts = this.postsService.getPosts(); // Retrieves all the posts before backend
     this.postsSub = this.postsService.getUpdatedPostsListener()
       .subscribe((posts: Post[]) => {
+        this.loadingSpinner = false;
         this.posts = posts;
       });
   }

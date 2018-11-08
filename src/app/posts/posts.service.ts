@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core'; // getting an error
 import { Subject } from 'rxjs/Subject';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({providedIn: 'root'}) // applies service to the root, you can also import and providers=postsServices in app.module
 export class PostsService {
   private posts: Post[] = [];
-  private updatedPosts = new Subject<Post[]>(); // Listener
+  private updatedPosts = new Subject<Post[]>(); // Listener | postsUpdated??!!
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {} // private router: is used in addPost() & updatePost
 
   getPosts() {
     this.http.get<{ message: string, posts: any }>('http://localhost:3000/posts')
@@ -34,7 +35,9 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
+    return this.http.get<{_id: string, title: string, content: string}>(
+      'http://localhost:3000/posts/' + id); // pulling from post-add.component
+    // return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
   }
 
   addPost(title: string, content: string) {
@@ -46,13 +49,21 @@ export class PostsService {
         post.id = id; // id updated and stored to post variable below
         this.posts.push(post); // updates local post
         this.updatedPosts.next([...this.posts]);
+        this.router.navigate(["/"]);
       });
   }
 
   updatePost(id: string, title: string, content: string) {
     const post: Post = { id: id, title: title, content: content };
     this.http.put('http://localhost:3000/posts/' + id, post) // http.put = put method from app.js - app.put(/posts/:id)
-      .subscribe(response => console.log(response));
+      .subscribe(response => {
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+        updatedPosts[oldPostIndex] = post;
+        this.posts = updatedPosts;
+        this.updatedPosts.next([...this.posts]);
+        this.router.navigate(["/"]);
+      });
   }
 
   deletePost(postId: string) {

@@ -1,12 +1,27 @@
 <!--Template driven forms below-->
+<!--Note: "Elvis operator" = post?.title | post?.content, forces ng to check if post exists before rendering title-->
+
 <mat-card>
-  <form (submit)="onSavePost(blogForm)" #blogForm="ngForm"> <!--Listening for submit button-->
+  <mat-spinner *ngIf="loadingSpinner"></mat-spinner> <!--ngIf= true = spinner visible-->
+  <form (submit)="onSavePost(blogForm)" #blogForm="ngForm" *ngIf="!loadingSpinner"> <!--Listening for submit button-->
     <mat-form-field>
-      <input matInput type="text" name="title" [ngModel]="post.title" required minlength="3" placeholder="Enter Title..." #title="ngModel">
+      <input matInput
+             type="text"
+             name="title"
+             [ngModel]="post?.title"
+             required minlength="3"
+             placeholder="Enter Title..."
+             #title="ngModel">
       <mat-error *ngIf="title.invalid">Enter a title, Please.</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput rows="5" name="content" [ngModel]="post.content" required placeholder="Content Here..." #content="ngModel"></textarea>
+      <textarea
+        matInput rows="5"
+        name="content"
+        [ngModel]="post?.content"
+        required placeholder="Content Here..."
+        #content="ngModel">
+      </textarea>
       <mat-error *ngIf="content.invalid">All title & No post?</mat-error>
     </mat-form-field>
     <button mat-raised-button color="accent" type="submit">Add Post</button>

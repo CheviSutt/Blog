@@ -1,5 +1,5 @@
-
-<mat-accordion multi="true" *ngIf="posts.length > 0"> <!--Multi="true" allows multiple posts to be open-->
+<mat-spinner *ngIf="loadingSpinner"></mat-spinner>
+<mat-accordion multi="true" *ngIf="posts.length > 0 && !loadingSpinner"> <!--Multi="true" allows multiple posts to be open-->
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
       <p>{{post.title}}</p>
@@ -11,5 +11,5 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="blog-text mat-body-1" *ngIf="posts.length <= 0">I feel lonely, No one has posted yet.</p>
+<p class="blog-text mat-body-1" *ngIf="posts.length <= 0 && !loadingSpinner">I feel lonely, No one has posted yet.</p>
 
