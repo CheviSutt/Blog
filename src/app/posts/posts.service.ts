@@ -19,7 +19,8 @@ export class PostsService {
           return { // every element in array will be converted to object
             title: post.title,
             content: post.content,
-            id: post._id
+            id: post._id,
+            imagePath: post.imagePath
           };
         });
       }))
@@ -40,21 +41,26 @@ export class PostsService {
     // return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
   }
 
-  addPost(title: string, content: string) {
-    const post: Post = { id: null, title: title, content: content };
-    this.http.post<{ message: string, postId: string }>('http://localhost:3000/posts', post)
+  addPost(title: string, content: string, image: File) {
+    // const post: Post = { id: null, title: title, content: content };
+    const postData = new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title); // title after image could be named anything
+    this.http.post<{ message: string, post: Post }>('http://localhost:3000/posts', postData)
       .subscribe((responseData) => {
         // console.log(responseData.message);
-        const id = responseData.postId;
-        post.id = id; // id updated and stored to post variable below
+        const post: Post = {id: responseData.post.id, title: title, content: content, imagePath: responseData.post.imagePath};
+        // const id = responseData.postId;
+        // post.id = id; // id updated and stored to post variable below
         this.posts.push(post); // updates local post
         this.updatedPosts.next([...this.posts]);
-        this.router.navigate(["/"]);
+        this.router.navigate(['/']);
       });
   }
 
   updatePost(id: string, title: string, content: string) {
-    const post: Post = { id: id, title: title, content: content };
+    const post: Post = { id: id, title: title, content: content, imagePath: null };
     this.http.put('http://localhost:3000/posts/' + id, post) // http.put = put method from app.js - app.put(/posts/:id)
       .subscribe(response => {
         const updatedPosts = [...this.posts];
