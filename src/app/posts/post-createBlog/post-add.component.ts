@@ -1,7 +1,7 @@
 
 import { Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { Post } from '../blog-post.model'; // post pipe
-import { NgForm } from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -16,20 +16,34 @@ export class PostAddComponent implements OnInit {
   enteredContent = '';
   post: Post;
   loadingSpinner = false;
+  form: FormGroup;
   private mode = 'newPost'; // Component properties, hint for Vue.js
   private postId: string; // Component properties
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.form = new FormGroup({
+      'title': new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
+      }),
+      'content': new FormControl(null, {validators: [Validators.required]})
+    });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if ( paramMap.has('postId')) {
+      if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
         this.loadingSpinner = true;
         this.postsService.getPost(this.postId).subscribe(postData => { // async
           this.loadingSpinner = false;
-          this.post = {id: postData._id, title: postData.title, content: postData.content}; // async
+          this.post = {
+            id: postData._id,
+            title: postData.title,
+            content: postData.content
+          }; // async
+          this.form.setValue({
+            'title': this.post.title,
+            'content': this.post.content}
+            );
         });
       } else {
         this.mode = 'newPost';
@@ -38,19 +52,23 @@ export class PostAddComponent implements OnInit {
     }); // observable listening to changes in route url/parameter
   }
 
-  onSavePost(form: NgForm) {
-    if (form.invalid) { // Keeps from posting empty fields
+  onSavePost() {
+    if (this.form.invalid) { // Keeps from posting empty fields
       return;
     }
     this.loadingSpinner = true;
     if (this.mode === 'newPost') {
-      this.postsService.addPost(form.value.title, form.value.content);
+      this.postsService.addPost(this.form.value.title, this.form.value.content);
     } else {
-      this.postsService.updatePost(this.postId, form.value.title, form.value.content);
+      this.postsService.updatePost(
+        this.postId,
+        this.form.value.title,
+        this.form.value.content
+      );
     }
     // const post: Post = { title: form.value.title, content: form.value.content};
     // this.postAdded.emit(post);
     // this.postsService.addPost(form.value.title, form.value.content); // Replaces Event Emitter
-    form.resetForm();
+    this.form.reset();
   }
 }

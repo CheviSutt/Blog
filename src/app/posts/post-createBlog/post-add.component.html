@@ -3,26 +3,26 @@
 
 <mat-card>
   <mat-spinner *ngIf="loadingSpinner"></mat-spinner> <!--ngIf= true = spinner visible-->
-  <form (submit)="onSavePost(blogForm)" #blogForm="ngForm" *ngIf="!loadingSpinner"> <!--Listening for submit button-->
+  <form [formGroup]="form" (submit)="onSavePost()" *ngIf="!loadingSpinner"> <!--Listening for submit button-->
     <mat-form-field>
-      <input matInput
-             type="text"
-             name="title"
-             [ngModel]="post?.title"
-             required minlength="3"
-             placeholder="Enter Title..."
-             #title="ngModel">
-      <mat-error *ngIf="title.invalid">Enter a title, Please.</mat-error>
+      <input
+        matInput
+        type="text"
+        formControlName="title"
+        placeholder="Enter Title...">
+      <mat-error *ngIf="form.get('title').invalid">Enter a title, Please.</mat-error>
     </mat-form-field>
+    <div>
+      <button mat-stroked-button type="button" (click)="selectFile.click()">Upload Image</button>
+      <input type="file" #selectFile>
+    </div>
     <mat-form-field>
       <textarea
-        matInput rows="5"
-        name="content"
-        [ngModel]="post?.content"
-        required placeholder="Content Here..."
-        #content="ngModel">
-      </textarea>
-      <mat-error *ngIf="content.invalid">All title & No post?</mat-error>
+        matInput
+        rows="4"
+        formControlName="content"
+        placeholder="Content Here..."></textarea>
+      <mat-error *ngIf="form.get('content').invalid">All title & No post?</mat-error>
     </mat-form-field>
     <button mat-raised-button color="accent" type="submit">Add Post</button>
   </form>
