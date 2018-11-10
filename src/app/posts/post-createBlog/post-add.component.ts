@@ -58,8 +58,8 @@ export class PostAddComponent implements OnInit {
     }); // observable listening to changes in route url/parameter
   }
 
-  onImageSelected(event: Event){
-    const file = (event.target as HTMLImageElement).files[0];
+  onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
     this.form.patchValue({image: file});
     this.form.get('image').updateValueAndValidity();
     // console.log(file);
