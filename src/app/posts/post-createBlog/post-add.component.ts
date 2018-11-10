@@ -4,6 +4,7 @@ import { Post } from '../blog-post.model'; // post pipe
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { mimeType } from './mime-type.validator';
 
 @Component({
   selector: 'app-post-add',
@@ -17,6 +18,7 @@ export class PostAddComponent implements OnInit {
   post: Post;
   loadingSpinner = false;
   form: FormGroup;
+  imagePreview: string;
   private mode = 'newPost'; // Component properties, hint for Vue.js
   private postId: string; // Component properties
 
@@ -26,7 +28,11 @@ export class PostAddComponent implements OnInit {
     this.form = new FormGroup({
       'title': new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
       }),
-      'content': new FormControl(null, {validators: [Validators.required]})
+      'content': new FormControl(null, {validators: [Validators.required]}),
+      'image': new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeType]
+      })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
@@ -50,6 +56,19 @@ export class PostAddComponent implements OnInit {
         this.postId = null;
       }
     }); // observable listening to changes in route url/parameter
+  }
+
+  onImageSelected(event: Event){
+    const file = (event.target as HTMLImageElement).files[0];
+    this.form.patchValue({image: file});
+    this.form.get('image').updateValueAndValidity();
+    // console.log(file);
+    // console.log(this.form);
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = <string>reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSavePost() {
