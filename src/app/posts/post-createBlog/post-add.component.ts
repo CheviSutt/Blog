@@ -45,7 +45,7 @@ export class PostAddComponent implements OnInit {
             id: postData._id,
             title: postData.title,
             content: postData.content,
-            imagePath: null
+            imagePath: postData.imagePath
           }; // async
           this.form.setValue({
             'title': this.post.title,
@@ -84,12 +84,10 @@ export class PostAddComponent implements OnInit {
       this.postsService.updatePost(
         this.postId,
         this.form.value.title,
-        this.form.value.content
+        this.form.value.content,
+        this.form.value.image
       );
     }
-    // const post: Post = { title: form.value.title, content: form.value.content};
-    // this.postAdded.emit(post);
-    // this.postsService.addPost(form.value.title, form.value.content); // Replaces Event Emitter
     this.form.reset();
   }
 }

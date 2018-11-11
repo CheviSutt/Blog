@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {FormControl} from '@angular/forms';
 
 @Injectable({providedIn: 'root'}) // applies service to the root, you can also import and providers=postsServices in app.module
 export class PostsService {
@@ -36,7 +37,7 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{_id: string, title: string, content: string}>(
+    return this.http.get<{_id: string, title: string, content: string, imagePath: string}>(
       'http://localhost:3000/posts/' + id); // pulling from post-add.component
     // return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
   }
@@ -59,16 +60,37 @@ export class PostsService {
       });
   }
 
-  updatePost(id: string, title: string, content: string) {
-    const post: Post = { id: id, title: title, content: content, imagePath: null };
-    this.http.put('http://localhost:3000/posts/' + id, post) // http.put = put method from app.js - app.put(/posts/:id)
+  updatePost(id: string, title: string, content: string, image: File | string) {
+    // const post: Post = { id: id, title: title, content: content, imagePath: null };
+    let postData: Post | FormData;
+    if (typeof image === 'object') {
+      postData = new FormData();
+      postData.append('id', id);
+      postData.append('title', title);
+      postData.append('content', content);
+      postData.append('image', image);
+    } else {
+      postData = {
+        id: id,
+        title: title,
+        content: content,
+        imagePath: image
+      };
+    }
+    this.http.put('http://localhost:3000/posts/' + id, postData) // http.put = put method from app.js - app.put(/posts/:id)
       .subscribe(response => {
         const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+        const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
+        const post: Post = {
+          id: id,
+          title: title,
+          content: content,
+          imagePath: ''
+        };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.updatedPosts.next([...this.posts]);
-        this.router.navigate(["/"]);
+        this.router.navigate(['/']);
       });
   }
 
