@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../blog-post.model';
 import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
+import { PageEvent } from '@angular/material';
 
 @Component({
   selector: 'app-post-currPosts',
@@ -18,6 +19,10 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   //   ];
   posts: Post[] = [];
   loadingSpinner = false;
+  totalPosts = 0;
+  postsPerPage = 2;
+  postsAmountSelect = [1, 2, 5, 10];
+  currentPage = 1;
   private postsSub: Subscription;
 
   constructor(public postsService: PostsService) {} // Looking for an instance of PostsService type,
@@ -25,17 +30,30 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadingSpinner = true;
-    this.postsService.getPosts();
+    this.postsService.getPosts(this.postsPerPage, this.currentPage);
    // this.posts = this.postsService.getPosts(); // Retrieves all the posts before backend
     this.postsSub = this.postsService.getUpdatedPostsListener()
-      .subscribe((posts: Post[]) => {
+      .subscribe((postData: {posts: Post[], postCount: number}) => {
+        // Post[], postCount defined in posts.service - updatedPosts ^^
         this.loadingSpinner = false;
-        this.posts = posts;
+        this.totalPosts = postData.postCount;
+        this.posts = postData.posts;
       });
   }
 
+  onChangedPage(pageData: PageEvent) {
+    // console.log(pageData);
+    this.loadingSpinner = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.postsPerPage = pageData.pageSize; // selected by user
+    this.postsService.getPosts(this.postsPerPage, this.currentPage);
+  }
+
   postDelete(postID: string) {
-    this.postsService.deletePost(postID);
+    this.loadingSpinner = true;
+    this.postsService.deletePost(postID).subscribe(() => {
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    });
   }
 
   ngOnDestroy() {

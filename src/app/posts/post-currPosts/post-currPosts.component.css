@@ -7,6 +7,14 @@ mat-spinner {
   margin: auto;
 }
 
+mat-expansion-panel {
+  margin-top: 0.5rem;
+}
+
+mat-paginator {
+  margin-top: 1rem;
+}
+
 .blog-text {
   text-align: center;
 }

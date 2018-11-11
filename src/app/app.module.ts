@@ -12,7 +12,8 @@ import {
   MatExpansionModule,
   MatInputModule,
   MatProgressSpinnerModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatPaginatorModule
 } from '@angular/material';
 import { HeadComponent } from './head/head.component';
 import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.component';
@@ -41,7 +42,8 @@ import { AppRoutingModule } from './app-routing.module';
     MatToolbarModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    MatPaginatorModule
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

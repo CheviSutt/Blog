@@ -14,5 +14,9 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+<!--length is bind'ed/bound to posts-currPosts.ts-->
+<!--(page)="onChangedPage($event)" is the event listener-->
+<mat-paginator [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="postsAmountSelect" (page)="onChangedPage($event)"
+*ngIf="posts.length >= 0 "></mat-paginator>
 <p class="blog-text mat-body-1" *ngIf="posts.length <= 0 && !loadingSpinner">I feel lonely, No one has posted yet.</p>
 

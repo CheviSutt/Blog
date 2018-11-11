@@ -9,27 +9,35 @@ import {FormControl} from '@angular/forms';
 @Injectable({providedIn: 'root'}) // applies service to the root, you can also import and providers=postsServices in app.module
 export class PostsService {
   private posts: Post[] = [];
-  private updatedPosts = new Subject<Post[]>(); // Listener | postsUpdated??!!
+  private updatedPosts = new Subject<{posts: Post[], postCount: number}>(); // Listener | postsUpdated??!!
 
   constructor(private http: HttpClient, private router: Router) {} // private router: is used in addPost() & updatePost
 
-  getPosts() {
-    this.http.get<{ message: string, posts: any }>('http://localhost:3000/posts')
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
+    this.http.get<{ message: string, posts: any, maxPosts: number}>('http://localhost:3000/posts' + queryParams)
       .pipe(map((postData) => {
-        return postData.posts.map(post => {
+        return {
+          posts: postData.posts.map(post => {
           return { // every element in array will be converted to object
             title: post.title,
             content: post.content,
             id: post._id,
             imagePath: post.imagePath
           };
+        }),
+          maxPosts: postData.maxPosts
+        };
+      })
+     )
+      .subscribe( reconfiguredPostData => { // reconfiguredPosts is result of map operation above
+        this.posts = reconfiguredPostData.posts; // Setting posts variable to posts from server
+        this.updatedPosts.next({
+          posts: [...this.posts],
+          postCount: reconfiguredPostData.maxPosts
         });
-      }))
-      .subscribe( reconfiguredPosts => { // reconfiguredPosts is result of map operation above
-        this.posts = reconfiguredPosts; // Setting posts variable to posts from server
-        this.updatedPosts.next([...this.posts]);
       });
-   // return [...this.posts]; // spread operator before backend added
+   // [...this.posts]; // spread operator before backend added
   }
 
   getUpdatedPostsListener() {
@@ -50,12 +58,6 @@ export class PostsService {
     postData.append('image', image, title); // title after image could be named anything
     this.http.post<{ message: string, post: Post }>('http://localhost:3000/posts', postData)
       .subscribe((responseData) => {
-        // console.log(responseData.message);
-        const post: Post = {id: responseData.post.id, title: title, content: content, imagePath: responseData.post.imagePath};
-        // const id = responseData.postId;
-        // post.id = id; // id updated and stored to post variable below
-        this.posts.push(post); // updates local post
-        this.updatedPosts.next([...this.posts]);
         this.router.navigate(['/']);
       });
   }
@@ -79,28 +81,13 @@ export class PostsService {
     }
     this.http.put('http://localhost:3000/posts/' + id, postData) // http.put = put method from app.js - app.put(/posts/:id)
       .subscribe(response => {
-        const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
-        const post: Post = {
-          id: id,
-          title: title,
-          content: content,
-          imagePath: ''
-        };
-        updatedPosts[oldPostIndex] = post;
-        this.posts = updatedPosts;
-        this.updatedPosts.next([...this.posts]);
         this.router.navigate(['/']);
       });
   }
 
   deletePost(postId: string) {
-    this.http.delete('http://localhost:3000/posts/' + postId) // http.delete = app.delete in app.js
-      .subscribe(() => {
-        const updatedPosts = this.posts.filter(post => post.id !== postId);
-        this.posts = updatedPosts;
-        this.updatedPosts.next([...this.posts]);
-      });
+    return this.http
+      .delete('http://localhost:3000/posts/' + postId); // subscribed in post-currPosts
   }
 
 }
