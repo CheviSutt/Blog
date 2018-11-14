@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const postsRoutes = require("./routes/posts");
+const userRoutes = require('./routes/user');
 
 // const Post = require("./models/post"); // not needed after server route = posts.js
 
@@ -10,7 +11,7 @@ const app = express();
 
 mongoose
   .connect(
-    'mongodb+srv://chevi:bR2yvRAbhPUiDdFw@cluster0-txgvm.mongodb.net/blog-post?retryWrites=true'
+    'mongodb+srv://chevi:bR2yvRAbhPUiDdFw@cluster0-txgvm.mongodb.net/blog-post?retryWrites=true' // if err remove ?retryWrites=true
   )
   .then(() => {
     console.log("Connected to database!");
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/posts/", postsRoutes);
+app.use("/user/", userRoutes);
 
 module.exports = app;
 
