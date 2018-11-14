@@ -21,6 +21,7 @@ import { PostsService } from './posts/posts.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './auth/login/login.component';
+import { SignUpComponent } from './auth/sign-up/sign-up.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { LoginComponent } from './auth/login/login.component';
     PostAddComponent,
     PostCurrPostsComponent,
     HeadComponent,
-    LoginComponent
+    LoginComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
