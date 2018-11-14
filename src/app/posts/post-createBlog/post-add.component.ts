@@ -1,7 +1,7 @@
 
 import { Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { Post } from '../blog-post.model'; // post pipe
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { mimeType } from './mime-type.validator';

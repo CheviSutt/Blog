@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require('multer'); // Able to store images
 
 const Post = require("../models/post");
+const confirmAuth = require('../middleware/compare-auth.js');
 
 const router = express.Router();
 
@@ -27,7 +28,10 @@ const storage = multer.diskStorage({
   }
 });
 
-router.post("", multer({storage: storage}).single('image'), (req, res, next) => {
+router.post(
+  "",
+  confirmAuth, // executed in compare-auth.js
+  multer({storage: storage}).single('image'), (req, res, next) => {
   const url = req.protocol + '://' + req.get('host');
   const post = new Post({
     title: req.body.title,
@@ -49,7 +53,10 @@ router.post("", multer({storage: storage}).single('image'), (req, res, next) => 
   });
 });
 
-router.put('/:id', multer({storage: storage}).single('image'), (req, res, next) => {
+router.put(
+  '/:id',
+  confirmAuth, // executed in compare-auth.js
+  multer({storage: storage}).single('image'), (req, res, next) => {
   // console.log(req.file);
   let imagePath = req.body.imagePath;
   if (req.file) {
@@ -103,7 +110,8 @@ router.get("/:id", (req, res, next) => { // called from "client" posts.service
   })
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", confirmAuth, // executed in compare-auth.js
+  (req, res, next) => {
   Post.deleteOne({ _id: req.params.id }).then(result => {
     console.log(result);
     res.status(200).json({ message: "Post deleted!" });
