@@ -18,6 +18,7 @@ export class LoginComponent {
     if (form.invalid) {
       return;
     }
+    this.loadingSpinner = true;
     this.authService.loginConfirm(form.value.email, form.value.password);
   }
 }
