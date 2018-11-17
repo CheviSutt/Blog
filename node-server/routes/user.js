@@ -51,11 +51,12 @@ router.post('/login', (req, res, next) => {
     const token = jsonWebToken.sign(
       { email: fetchedUser.email, userId: fetchedUser._id },
       'here_is_where_u_place_a_string_2b_hashed', // also located in compare-auth.js
-      {expiresIn: '1h'}
+      { expiresIn: '1h' } // expires on server
     );
     // console.log(token);
     res.status(200).json({
-      token: token // look in auth.service comment | response property?
+      token: token, // look in auth.service comment | response property?
+      expiresIn: '3600', // expires on client
     });
   })
     .catch(err => {
