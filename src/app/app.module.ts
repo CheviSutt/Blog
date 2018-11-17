@@ -13,7 +13,8 @@ import {
   MatInputModule,
   MatProgressSpinnerModule,
   MatToolbarModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatDialogModule
 } from '@angular/material';
 import { HeadComponent } from './head/head.component';
 import { PostCurrPostsComponent } from './posts/post-currPosts/post-currPosts.component';
@@ -22,7 +23,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
-
+import { ErrorInterceptor } from './error.interceptor';
+import { ErrorComponent } from '../errors/error.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     PostCurrPostsComponent,
     HeadComponent,
     LoginComponent,
-    SignUpComponent
+    SignUpComponent,
+    ErrorComponent
   ],
   imports: [
   BrowserModule,
@@ -47,9 +50,14 @@ import { AuthInterceptor } from './auth/auth-interceptor';
   MatExpansionModule,
   MatProgressSpinnerModule,
   HttpClientModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatDialogModule
 ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
-  bootstrap: [AppComponent]
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+    ],
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent] // Makes angular aware that its used even thou it cant see it
 })
 export class AppModule {}

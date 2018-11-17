@@ -22,7 +22,7 @@ router.post('/signUp', (req, res, next) => {
           });
         }).catch(err => {
           res.status(500).json({
-            error: err
+              message: 'Authentication credentials are invalid!'
           });
       });
     });
@@ -63,7 +63,7 @@ router.post('/login', (req, res, next) => {
     .catch(err => {
       // console.log(err);
       return res.status(401).json({
-        message: 'Authorization Failed!'
+        message: 'Authentication credentials are invalid!'
       });
     });
 });

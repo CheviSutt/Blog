@@ -21,8 +21,8 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   loadingSpinner = false;
   totalPosts = 0;
-  postsPerPage = 2;
-  postsAmountSelect = [1, 3, 5, 10];
+  postsPerPage = 3;
+  postsAmountSelect = [1, 2, 5, 10];
   currentPage = 1;
   userIsAuthenticated = false;
   userId: string;
@@ -65,6 +65,8 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
     this.loadingSpinner = true;
     this.postsService.deletePost(postID).subscribe(() => {
       this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    }, () => {
+      this.loadingSpinner = false;
     });
   }
 

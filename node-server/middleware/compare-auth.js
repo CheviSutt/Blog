@@ -8,7 +8,7 @@ module.exports = (req, res, next) => { // Typical looking middleware in express,
     req.userData = {email: decodedToken.email, userId: decodedToken.userId };
     next();
   } catch (error) {
-    res.status(401).json({message: "Authorization Failed!!!!"});
+    res.status(401).json({message: "You have failed to authenticate!"});
   }
 };
 

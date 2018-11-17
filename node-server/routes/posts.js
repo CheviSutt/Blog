@@ -31,7 +31,8 @@ const storage = multer.diskStorage({
 router.post(
   "",
   confirmAuth, // executed in compare-auth.js
-  multer({storage: storage}).single('image'), (req, res, next) => {
+  multer({storage: storage}).single('image'),
+  (req, res, next) => {
   const url = req.protocol + '://' + req.get('host');
   const post = new Post({
     title: req.body.title,
@@ -51,10 +52,16 @@ router.post(
         // imagePath: createdPost.imagePath
       }
     });
-  });
-});
+  })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Creating a Post Failed'
+      });
+    });
+  }
+);
 
-router.put(
+router.put( // Update path/route
   '/:id',
   confirmAuth, // executed in compare-auth.js
   multer({storage: storage}).single('image'), (req, res, next) => {
@@ -76,9 +83,14 @@ router.put(
     if (result.nModified > 0) {
       res.status(200).json({message: "Update successful!"});
     } else {
-      res.status(401).json({message: "Not Authorized!"});
+      res.status(401).json({message: "Not authorized!"});
     }
-  });
+  })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Unable To update post'
+      });
+    });
  }
 );
 
@@ -103,6 +115,11 @@ router.get("", (req, res, next) => {
         posts: fetchedPosts, // was documents
         maxPosts: count
       });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Failed to fetch Posts'
+      })
     });
 });
 
@@ -114,6 +131,11 @@ router.get("/:id", (req, res, next) => { // called from "client" posts.service
       res.status(404).json({message: 'Post not found!'});
     }
   })
+    .catch(error => {
+    res.status(500).json({
+      message: 'Failed to fetch Post'
+    });
+  });
 });
 
 router.delete("/:id", confirmAuth, // executed in compare-auth.js
@@ -125,6 +147,10 @@ router.delete("/:id", confirmAuth, // executed in compare-auth.js
     } else {
       res.status(401).json({message: "Not Authorized!"});
     }
+  }).catch(error => {
+    res.status(500).json({
+      message: 'Failed to fetch Posts'
+    });
   });
 });
 

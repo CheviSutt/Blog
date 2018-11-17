@@ -1,17 +1,19 @@
 
-import { Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Post } from '../blog-post.model'; // post pipe
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { mimeType } from './mime-type.validator';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-add',
   templateUrl: './post-add.component.html',
   styleUrls: ['./post-add.component.css']
 })
-export class PostAddComponent implements OnInit {
+export class PostAddComponent implements OnInit, OnDestroy {
   // @Output() postAdded = new EventEmitter<Post>(); // Data emitted is "Post"
   enteredTitle = '';
   enteredContent = '';
@@ -21,10 +23,16 @@ export class PostAddComponent implements OnInit {
   imagePreview: string;
   private mode = 'newPost'; // Component properties, hint for Vue.js
   private postId: string; // Component properties
+  private authStatusSub: Subscription;
 
-  constructor(public postsService: PostsService, public route: ActivatedRoute) {}
+  constructor(public postsService: PostsService, public route: ActivatedRoute, private authservice: AuthService) {}
 
   ngOnInit() {
+    this.authStatusSub = this.authservice.getAuthStatusListener().subscribe(
+      authStatus => {
+        this.loadingSpinner = false;
+    }
+    );
     this.form = new FormGroup({
       'title': new FormControl(null, {validators: [Validators.required, Validators.minLength(3)]
       }),
@@ -90,5 +98,9 @@ export class PostAddComponent implements OnInit {
       );
     }
     this.form.reset();
+  }
+
+  ngOnDestroy() {
+    this.authStatusSub.unsubscribe();
   }
 }
