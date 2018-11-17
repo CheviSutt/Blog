@@ -23,6 +23,10 @@ export class HeadComponent implements OnInit, OnDestroy {
       });
   }
 
+  onLogout() {
+    this.authService.logoutConfirm();
+  }
+
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
   }

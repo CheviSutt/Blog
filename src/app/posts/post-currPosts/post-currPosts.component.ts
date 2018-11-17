@@ -22,7 +22,7 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   loadingSpinner = false;
   totalPosts = 0;
   postsPerPage = 2;
-  postsAmountSelect = [1, 2, 5, 10];
+  postsAmountSelect = [1, 3, 5, 10];
   currentPage = 1;
   userIsAuthenticated = false;
   private postsSub: Subscription;
