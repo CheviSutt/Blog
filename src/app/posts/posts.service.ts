@@ -23,7 +23,8 @@ export class PostsService {
             title: post.title,
             content: post.content,
             id: post._id,
-            imagePath: post.imagePath
+            imagePath: post.imagePath,
+            creator: post.creator
           };
         }),
           maxPosts: postData.maxPosts
@@ -31,6 +32,7 @@ export class PostsService {
       })
      )
       .subscribe( reconfiguredPostData => { // reconfiguredPosts is result of map operation above
+        // console.log(reconfiguredPostData);
         this.posts = reconfiguredPostData.posts; // Setting posts variable to posts from server
         this.updatedPosts.next({
           posts: [...this.posts],
@@ -45,8 +47,13 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{_id: string, title: string, content: string, imagePath: string}>(
-      'http://localhost:3000/posts/' + id); // pulling from post-add.component
+    return this.http.get<{
+      _id: string,
+      title: string,
+      content: string,
+      imagePath: string,
+      creator: string
+    }>('http://localhost:3000/posts/' + id); // pulling from post-add.component
     // return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
   }
 
@@ -76,7 +83,8 @@ export class PostsService {
         id: id,
         title: title,
         content: content,
-        imagePath: image
+        imagePath: image,
+        creator: null
       };
     }
     this.http.put('http://localhost:3000/posts/' + id, postData) // http.put = put method from app.js - app.put(/posts/:id)

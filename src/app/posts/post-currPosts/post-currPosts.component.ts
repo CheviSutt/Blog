@@ -25,6 +25,7 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   postsAmountSelect = [1, 3, 5, 10];
   currentPage = 1;
   userIsAuthenticated = false;
+  userId: string;
   private postsSub: Subscription;
   private authStatusSub: Subscription;
 
@@ -35,6 +36,7 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
     this.loadingSpinner = true;
     this.postsService.getPosts(this.postsPerPage, this.currentPage);
    // this.posts = this.postsService.getPosts(); // Retrieves all the posts before backend
+    this.userId = this.authService.getUserId();
     this.postsSub = this.postsService.getUpdatedPostsListener()
       .subscribe((postData: {posts: Post[], postCount: number}) => {
         // Post[], postCount defined in posts.service - updatedPosts ^^
@@ -47,6 +49,7 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
       this.userIsAuthenticated = isAuthenticated;
+      this.userId = this.authService.getUserId();
     });
   }
 
