@@ -4,6 +4,7 @@ import { Post } from '../blog-post.model';
 import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-post-currPosts',
@@ -23,9 +24,11 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
   postsPerPage = 2;
   postsAmountSelect = [1, 2, 5, 10];
   currentPage = 1;
+  userIsAuthenticated = false;
   private postsSub: Subscription;
+  private authStatusSub: Subscription;
 
-  constructor(public postsService: PostsService) {} // Looking for an instance of PostsService type,
+  constructor(public postsService: PostsService, private authService: AuthService) {} // Looking for an instance of PostsService type,
   // Keyword: public, stores value of property in component^^
 
   ngOnInit() {
@@ -39,6 +42,12 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
         this.totalPosts = postData.postCount;
         this.posts = postData.posts;
       });
+    this.userIsAuthenticated = this.authService.getIsAuth(); // called from authService
+    this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe(isAuthenticated => {
+      this.userIsAuthenticated = isAuthenticated;
+    });
   }
 
   onChangedPage(pageData: PageEvent) {
@@ -58,5 +67,6 @@ export class PostCurrPostsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.postsSub.unsubscribe(); // Prevents memory leak
+    this.authStatusSub.unsubscribe();
   }
 }
