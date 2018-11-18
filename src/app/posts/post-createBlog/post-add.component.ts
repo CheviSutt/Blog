@@ -14,9 +14,6 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./post-add.component.css']
 })
 export class PostAddComponent implements OnInit, OnDestroy {
-  // @Output() postAdded = new EventEmitter<Post>(); // Data emitted is "Post"
-  enteredTitle = '';
-  enteredContent = '';
   post: Post;
   loadingSpinner = false;
   form: FormGroup;
