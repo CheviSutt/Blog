@@ -47,7 +47,7 @@ exports.loginUser = (req, res, next) => {
       }
       const token = jsonWebToken.sign(
         { email: fetchedUser.email, userId: fetchedUser._id },
-        'here_is_where_u_place_a_string_2b_hashed', // also located in compare-auth.js
+        process.env.JWT_KEY, // also located in compare-auth.js
         { expiresIn: '1h' } // expires on server
       );
       // console.log(token);

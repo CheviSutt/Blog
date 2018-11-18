@@ -11,7 +11,7 @@ const app = express();
 
 mongoose
   .connect(
-    'mongodb+srv://chevi:bR2yvRAbhPUiDdFw@cluster0-txgvm.mongodb.net/blog-post?retryWrites=true' // if err remove ?retryWrites=true
+    'mongodb+srv://chevi:' + process.env.MONGO_ATLAS_PASSWORD + '@cluster0-txgvm.mongodb.net/blog-post?retryWrites=true' // if err add ?retryWrites=true after /blog-post
   )
   .then(() => {
     console.log("Connected to database!");
