@@ -4,7 +4,9 @@ import { Subject } from 'rxjs/Subject';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {FormControl} from '@angular/forms';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/posts/';
 
 @Injectable({providedIn: 'root'}) // applies service to the root, you can also import and providers=postsServices in app.module
 export class PostsService {
@@ -15,8 +17,12 @@ export class PostsService {
 
   getPosts(postsPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
-    this.http.get<{ message: string, posts: any, maxPosts: number}>('http://localhost:3000/posts' + queryParams)
-      .pipe(map((postData) => {
+    this.http
+      .get<{ message: string, posts: any, maxPosts: number}>(
+      BACKEND_URL + queryParams
+      )
+      .pipe(
+        map((postData) => {
         return {
           posts: postData.posts.map(post => {
           return { // every element in array will be converted to object
@@ -53,7 +59,7 @@ export class PostsService {
       content: string,
       imagePath: string,
       creator: string
-    }>('http://localhost:3000/posts/' + id); // pulling from post-add.component
+    }>(BACKEND_URL + id); // pulling from post-add.component
     // return {...this.posts.find(p => p.id === id)}; // ... is a Spread operator | used in post-add.component
   }
 
@@ -63,7 +69,9 @@ export class PostsService {
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title); // title after image could be named anything
-    this.http.post<{ message: string, post: Post }>('http://localhost:3000/posts', postData)
+    this.http
+      .post<{ message: string, post: Post }>(
+        BACKEND_URL, postData)
       .subscribe((responseData) => {
         this.router.navigate(['/']);
       });
@@ -87,7 +95,7 @@ export class PostsService {
         creator: null
       };
     }
-    this.http.put('http://localhost:3000/posts/' + id, postData) // http.put = put method from app.js - app.put(/posts/:id)
+    this.http.put(BACKEND_URL + id, postData) // http.put = put method from app.js - app.put(/posts/:id)
       .subscribe(response => {
         this.router.navigate(['/']);
       });
@@ -95,7 +103,7 @@ export class PostsService {
 
   deletePost(postId: string) {
     return this.http
-      .delete('http://localhost:3000/posts/' + postId); // subscribed in post-currPosts
+      .delete(BACKEND_URL + postId); // subscribed in post-currPosts
   }
 
 }
